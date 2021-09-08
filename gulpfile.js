@@ -9,6 +9,8 @@ svgSprite = require('gulp-svg-sprite'),
 rename = require('gulp-rename'),
 clean = require('gulp-clean'),
 replace = require('gulp-replace'),
+hexrgba = require('postcss-hexrgba'),
+webpack = require('webpack'),
 browserSync = require('browser-sync').create();
 
 function html(done) {
@@ -18,7 +20,7 @@ function html(done) {
 
 function styles() {
     return gulp.src('app/assets/styles/styles.css')
-        .pipe(postcss([cssImport, mixins, cssvars, nested, autoprefixer]))
+        .pipe(postcss([cssImport, mixins, cssvars, nested, hexrgba, autoprefixer]))
         .on('error', function(errorInfo) {
             console.log(errorInfo.toString());
             this.emit('end');
@@ -70,6 +72,18 @@ var config = {
     }
 }
 
+function scripts(callback) {
+    return webpack(require('./webpack.config.js'), function(err, stats) {
+        if (err) {
+            console.log(err.toString());
+        }
+
+
+        console.log(stats.toString());
+        callback();
+    });
+}
+
 exports.icons = gulp.series(createSprite, copySpriteCSS, cleanTempSpriteCSS);
 
 exports.watch = function() {
@@ -81,4 +95,10 @@ exports.watch = function() {
 
     gulp.watch('app/index.html', html);
     gulp.watch('app/assets/styles/**/*.css', gulp.series(styles, cssInject));
+    gulp.watch('app/assets/scripts/**/*.js', gulp.series(scripts, html));
 };
+
+
+
+
+
