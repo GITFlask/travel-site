@@ -1,14 +1,7 @@
-import Person from './modules/Person';
+import $ from 'jquery';
+import MobileMenu from './modules/MobileMenu';
+import RevealOnScroll from './modules/RevealOnScroll';
 
-class Adult extends Person {
-    payTaxes() {
-        console.log(this.name + " is paying Taxes");
-    }
-}
-
-var John = new Person("John Doe", "Blue");
-John.greet();
-
-var Jane = new Adult("Jane Doe", "Red");
-Jane.greet();
-Jane.payTaxes();
+var mobileMenu = new MobileMenu();
+new RevealOnScroll($(".feature-item"), "85%");
+new RevealOnScroll($(".testimonial"), "60%");
